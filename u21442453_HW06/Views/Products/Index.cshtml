@@ -1,0 +1,263 @@
+﻿@model PagedList.IPagedList<u21442453_HW06.Models.products>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Products List";
+    var count = 0;
+
+}
+
+<h2>Products (Page @Model.PageNumber)</h2>
+<div>  
+        <input style="float: left" class="form-control" type="text" placeholder="Enter product name..." id="searchText"/>
+        <input style="float: left" type="button" class="btn btn-primary" id="btn-search" value="Search"/>
+        <input style="float: left" type="button" class="btn btn-info" id="btn-create" value="Create"/>
+</div>
+
+<table class="table">
+    @foreach (var item in Model)
+    {
+        if (count == 0)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.product_name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.model_year)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.list_price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.brands.brand_name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.categories.category_name)
+                </th>
+                <th></th>
+            </tr>
+        }
+        count++;
+    }
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.product_name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.model_year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.list_price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.brands.brand_name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.categories.category_name)
+            </td>
+            <td>
+                <input type="button" class="btn btn-primary btn-edit" value="Edit" data-id="@item.product_id" /> |
+                <input type="button" class="btn btn-info btn-details" value="Details" data-id="@item.product_id" /> |
+                <input type="button" class="btn btn-danger btn-delete" value="Delete" data-id="@item.product_id" />
+        </tr>
+    }
+
+</table>
+
+<table class="table-condensed" width="100%" align="center">
+    <thead>
+        <tr>
+            <td>
+                <p>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+                </p>
+            </td>
+        </tr>
+    </thead>
+</table>
+
+@section Scripts {
+    <script>
+        var detailUrl = '/Products/Details';
+        var editUrl = '/Products/Edit';
+        var deleteUrl = '/Products/Delete';
+        var createUrl = '/Products/Create';
+        var searchUrl = '/Products/Search';
+        $(function () {
+            $(".btn-details").click(function () {
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                    url: detailUrl,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "id": id },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+                        $('#detailsModalContent').html(data);
+                        $('#detailsModal').modal(options);
+                        $('#detailsModal').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            });
+
+            $("#detailsBtnClose").click(function () {
+                $('#detailsModal').modal("hide");
+            });
+
+            $(".btn-edit").click(function () {
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                    url: editUrl,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "id": id },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+                        $('#editModalContent').html(data);
+                        $('#editModal').modal(options);
+                        $('#editModal').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            });
+
+            $("#editBtnClose").click(function () {
+                $('#editModal').modal("hide");
+            });
+
+            $(".btn-delete").click(function () {
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                    url: deleteUrl,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "id": id },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+                        $('#deleteModalContent').html(data);
+                        $('#deleteModal').modal(options);
+                        $('#deleteModal').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            });
+
+            $("#deleteBtnClose").click(function () {
+                $('#deleteModal').modal("hide");
+            });
+
+            $("#btn-create").click(function () {
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                    url: createUrl,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "id": id },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+                        $('#createModalContent').html(data);
+                        $('#createModal').modal(options);
+                        $('#createModal').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            });
+
+            $("#createBtnClose").click(function () {
+                $('#createModal').modal("hide");
+            });
+
+            $("#btn-search").click(function () {
+                var searchString = $('#searchText').val();
+                if (searchString == "" || searchString == null) {
+                    alert("Please enter a product name to search.")
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: createUrl,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "searchText": searchString },
+                    datatype: "json",
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            });
+        });
+    </script>
+
+}
+
+<div class="modal fade" id="detailsModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='detailsModalContent'></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" id="detailsBtnClose">Close</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='editModalContent'></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" id="editBtnClose">Close</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='deleteModalContent'></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" id="deleteBtnClose">Close</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='createModalContent'></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" id="createBtnClose">Close</button>
+        </div>
+    </div>
+</div>

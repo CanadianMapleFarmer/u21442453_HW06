@@ -1,0 +1,28 @@
+﻿@model IEnumerable<u21442453_HW06.Models.OrdersVM>
+
+@{
+    ViewBag.Title = "Orders";
+}
+
+<h2>Orders</h2>
+
+@foreach (var item in Model)
+{
+    <h4>Order @item.orders.order_id - @item.orders.order_date</h4>
+    <table class="table">
+        <tr>
+            <th>Product Name</th>
+            <th>List Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+        <tbody>
+            @foreach (var product in item.orders.order_items)
+            {
+                <td>@product.products.product_name</td>
+                <td>@product.products.list_price</td>
+                @*<td>@product.products.stocks.quantity</td>*@
+            }
+        </tbody>
+    </table>
+}

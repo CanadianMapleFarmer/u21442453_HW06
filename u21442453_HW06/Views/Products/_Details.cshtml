@@ -1,0 +1,78 @@
+﻿@model IEnumerable<u21442453_HW06.Models.DetailsVM>
+@{ var count = 0;}
+<div>
+
+@foreach (var item in Model)
+{
+    if (count == 0)
+    {
+            <div class="modal-header">
+                <h4>Product: @Html.DisplayFor(itemItem => item.productDetails.product_id)</h4>
+            </div>
+            <dl class="dl-horizontal">
+                <dt>
+                    Name
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(itemItem => item.productDetails.product_name)
+                </dd>
+
+                <dt>
+                    Year
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(itemItem => item.productDetails.model_year)
+                </dd>
+
+                <dt>
+                    Price
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(itemItem => item.productDetails.list_price)
+                </dd>
+
+                <dt>
+                    Brand
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(itemItem => item.productDetails.brands.brand_name)
+                </dd>
+
+                <dt>
+                    Category
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(itemItem => item.productDetails.categories.category_name)
+                </dd>
+            </dl>
+    }
+    count++;
+}
+<table class="table">
+    <tr>
+        <th>Store</th>
+        <th>Stock</th>
+    </tr>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.storeDetails.store_name</td>
+            @if (item.stockDetails.quantity == 0 || item.stockDetails.quantity == null)
+            {
+                <td class="text-danger">Out of stock</td>
+            }
+            else
+            {
+                <td>@item.stockDetails.quantity</td>
+            }
+        </tr>
+        }
+    </tbody>
+</table>
+</div>

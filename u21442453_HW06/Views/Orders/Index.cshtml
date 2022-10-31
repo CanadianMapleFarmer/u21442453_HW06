@@ -1,28 +1,66 @@
-﻿@model IEnumerable<u21442453_HW06.Models.OrdersVM>
+﻿@model PagedList.IPagedList<u21442453_HW06.Models.order_items> 
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "Orders";
+    var check = 1;
+    decimal amount = 0;
+    var currentID = 0;
 }
 
 <h2>Orders</h2>
 
 @foreach (var item in Model)
 {
-    <h4>Order @item.orders.order_id - @item.orders.order_date</h4>
-    <table class="table">
-        <tr>
-            <th>Product Name</th>
-            <th>List Price</th>
-            <th>Quantity</th>
-            <th>Total</th>
-        </tr>
-        <tbody>
-            @foreach (var product in item.orders.order_items)
-            {
-                <td>@product.products.product_name</td>
-                <td>@product.products.list_price</td>
-                @*<td>@product.products.stocks.quantity</td>*@
-            }
-        </tbody>
-    </table>
+    if (item.orders.order_id == check)
+    {
+        <h4>Order @item.order_id - @item.orders.order_date.ToShortDateString()</h4>
+        <table class="table">
+            <tr>
+                <th>Product Name</th>
+                <th>List Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+            <tbody>
+                @foreach (var product in item.orders.order_items)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(x => product.products.product_name)</td>
+                        <td>@Html.DisplayFor(x => product.products.list_price)</td>
+                        <td>@Html.DisplayFor(x => product.quantity)</td>
+                        <td>@(product.quantity * product.list_price)</td>
+                    </tr>
+                    amount = amount + (product.quantity * product.list_price);
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th> </th>
+                    <th> </th>
+                    <th>
+                        Grand Total:
+                    </th>
+                    <th>
+                        @amount
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+        check++;
+        amount = 0;
+    }
+    check = item.orders.order_id + 1;
 }
+
+<table class="table-condensed" width="100%" align="center">
+    <thead>
+        <tr>
+            <td>
+                <p>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+                </p>
+            </td>
+        </tr>
+    </thead>
+</table>

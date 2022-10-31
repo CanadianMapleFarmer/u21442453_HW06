@@ -1,1 +1,54 @@
-﻿
+﻿<canvas id="myChart" width="1000" height="450"></canvas>
+
+@section Scripts {
+    <script>
+        const ctx = document.getElementById('myChart').getContext("2d");
+        const labels = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ]
+        let data = [];
+        @{ 
+            var data = ViewBag.reportData;
+            foreach (var item in data)
+            {
+                @:data.push(@item);
+            }
+        }
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "# of Mountain Bikes Sold",
+                    data: data,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 206, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(153, 102, 255)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 206, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(153, 102, 255)',
+                        'rgb(255, 159, 64)'
+                    ],
+                    borderWidth: 1
+                }],
+            }
+        });
+    </script>
+} 

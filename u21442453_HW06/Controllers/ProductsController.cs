@@ -17,9 +17,17 @@ namespace u21442453_HW06.Controllers
         private BikeStoresEntities1 db = new BikeStoresEntities1();
 
         // GET: Product
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, string searchText)
         {
             var products = db.products.Include(p => p.brands).Include(p => p.categories);
+
+            if (!String.IsNullOrEmpty(searchText))
+            {
+                products = products.Where(x => x.product_name.Contains(searchText));
+            }else
+            {
+                products = db.products.Include(p => p.brands).Include(p => p.categories);
+            }
             int pageIndex = (page ?? 1);
             return View(products.ToList().ToPagedList(pageIndex, 10));
         }
@@ -149,7 +157,7 @@ namespace u21442453_HW06.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Search(string searchText, int? page)
+        public ActionResult Search(string searchText)
         {
             var products = db.products.Include(p => p.brands).Include(p => p.categories);
 
@@ -158,8 +166,7 @@ namespace u21442453_HW06.Controllers
                 products = products.Where(x => x.product_name.Contains(searchText));
             }
 
-            int pageIndex = (page ?? 1);
-            return View(products.ToList().ToPagedList(pageIndex, 10));
+            return RedirectToAction("Index", new { searchText = searchText});
         }
 
         protected override void Dispose(bool disposing)

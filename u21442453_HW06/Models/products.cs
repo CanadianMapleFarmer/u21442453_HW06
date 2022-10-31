@@ -11,6 +11,7 @@ namespace u21442453_HW06.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     
     public partial class products
     {
@@ -22,10 +23,15 @@ namespace u21442453_HW06.Models
         }
     
         public int product_id { get; set; }
+        [Display(Name = "Name")]
         public string product_name { get; set; }
+        [Display(Name = "Brand")]
         public int brand_id { get; set; }
+        [Display(Name = "Category")]
         public int category_id { get; set; }
+        [Display(Name = "Year")]
         public short model_year { get; set; }
+        [Display(Name = "Price")]
         public decimal list_price { get; set; }
     
         public virtual brands brands { get; set; }

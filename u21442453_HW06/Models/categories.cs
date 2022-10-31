@@ -11,7 +11,8 @@ namespace u21442453_HW06.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class categories
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,8 +20,10 @@ namespace u21442453_HW06.Models
         {
             this.products = new HashSet<products>();
         }
-    
+
+        [Display(Name = "Category")]
         public int category_id { get; set; }
+        [Display(Name = "Category")]
         public string category_name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
